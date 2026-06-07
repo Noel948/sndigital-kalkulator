@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ROI Kalkulátor – SN Digital</title>
-  <link rel="icon" href="favicon.png" type="image/png" />
+  <link rel="icon" href="sndigital-icon-48.png" type="image/png" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -299,7 +299,7 @@
 
   <!-- Header – dinamikusan változik niche szerint -->
   <div class="header">
-    <img src="logo.png" alt="SN Digital" class="header-logo" />
+    <img src="sndigital-lockup-1x.png" alt="SN Digital" class="header-logo" />
     <div class="badge" id="header-badge">SN Digital · Elveszett Bevétel Elemzés</div>
     <h1 id="header-title">Mennyit veszít <span>most</span> a vállalkozása?</h1>
     <p id="header-sub">Számítsa ki valós időben, mennyibe kerülnek a kiszaladt hívások – és hogyan térül meg a megoldás.</p>
@@ -524,7 +524,9 @@
 
     document.getElementById('r-lost').textContent    = fmt(monthlyLost);
     document.getElementById('r-roi').textContent     = roi.toFixed(1).replace('.', ',') + '×';
-    document.getElementById('r-payback').textContent = payback !== null ? Math.ceil(payback) + ' nap' : '–';
+    document.getElementById('r-payback').textContent = payback !== null
+      ? (payback < 1 ? payback.toFixed(1).replace('.', ',') : Math.ceil(payback)) + ' nap'
+      : '–';
 
     const pct = Math.min((roi / 20) * 100, 100);
     document.getElementById('progress-bar').style.width = pct + '%';
