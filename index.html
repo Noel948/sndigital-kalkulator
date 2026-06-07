@@ -315,7 +315,7 @@
       <div class="field">
         <label>Napi hívások száma</label>
         <div class="input-wrap">
-          <input type="number" id="inp-calls" min="1" max="200" value="15" oninput="calc()" />
+          <input type="number" id="inp-calls" min="1" max="200" value="12" oninput="calc()" />
           <span class="unit">hívás/nap</span>
         </div>
       </div>
@@ -323,7 +323,7 @@
       <div class="field">
         <label>Ebből nem fogadott / visszahívás nélkül maradt</label>
         <div class="input-wrap">
-          <input type="number" id="inp-lost-count" min="0" max="200" value="5" oninput="calc()" />
+          <input type="number" id="inp-lost-count" min="0" max="200" value="1" oninput="calc()" />
           <span class="unit">hívás/nap</span>
         </div>
       </div>
@@ -331,7 +331,7 @@
       <div class="field">
         <label>Átlagos munkaérték (Ft)</label>
         <div class="input-wrap">
-          <input type="number" id="inp-value" min="1000" step="1000" value="70000" oninput="calc()" />
+          <input type="number" id="inp-value" min="1000" step="1000" value="85000" oninput="calc()" />
           <span class="unit">Ft / megbízás</span>
         </div>
       </div>
@@ -339,7 +339,7 @@
       <div class="field">
         <label>Nyitvatartási napok / hónap</label>
         <div class="input-wrap">
-          <input type="number" id="inp-days" min="1" max="31" value="26" oninput="calc()" />
+          <input type="number" id="inp-days" min="1" max="31" value="22" oninput="calc()" />
           <span class="unit">nap/hó</span>
         </div>
       </div>
@@ -388,7 +388,7 @@
         <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px">
           <div style="font-size:12px;color:var(--muted);margin-bottom:4px">4. lépés</div>
           <div style="font-size:13px;font-weight:600">ROI &amp; megtérülés</div>
-          <div style="font-size:12px;color:#c4c8e0;margin-top:4px">Havi kiesés ÷ 100 000 Ft = szorzó · Megtérülési idő napban</div>
+          <div style="font-size:12px;color:#c4c8e0;margin-top:4px">Havi kiesés ÷ 100 000 Ft = szorzó · Éves díj ÷ napi kiesés = megtérülési napok</div>
         </div>
       </div>
 
@@ -424,7 +424,7 @@
         <div class="result-box box-payback">
           <div class="r-label">Megtérülési idő</div>
           <div class="r-val" id="r-payback">– nap</div>
-          <div class="r-sub">ennyi nap alatt termeli ki</div>
+          <div class="r-sub">munkanap alatt termeli ki az éves díjat</div>
         </div>
       </div>
 
@@ -454,19 +454,19 @@
 <script>
   const NICHES = {
     auto:  {
-      calls: 15, lostCount: 5, value: 70000, days: 26,
+      calls: 12, lostCount: 1, value: 85000, days: 22,
       badge: 'SN Digital · Autószerviz elemzés',
       title: 'Mennyit veszít <span>most</span> az autószervize?',
       sub:   'Számítsa ki valós időben, mennyibe kerülnek a kiszaladt hívások – és hogyan térül meg a megoldás.',
     },
     klima: {
-      calls: 8, lostCount: 2, value: 250000, days: 22,
+      calls: 6, lostCount: 1, value: 120000, days: 20,
       badge: 'SN Digital · Klímaszerelő elemzés',
       title: 'Mennyit veszít <span>most</span> a klímaszervize?',
       sub:   'Számítsa ki valós időben, mennyibe kerülnek a kiszaladt hívások – és hogyan térül meg a megoldás.',
     },
     villa: {
-      calls: 10, lostCount: 3, value: 80000, days: 24,
+      calls: 10, lostCount: 2, value: 40000, days: 22,
       badge: 'SN Digital · Villanyszerelő elemzés',
       title: 'Mennyit veszít <span>most</span> a villanyszerelő vállalkozása?',
       sub:   'Számítsa ki valós időben, mennyibe kerülnek a kiszaladt hívások – és hogyan térül meg a megoldás.',
@@ -516,7 +516,7 @@
     const dailyLost   = lostCalls * value;
     const monthlyLost = dailyLost * days;
     const roi         = monthlyLost / sysPrice;
-    const payback     = dailyLost > 0 ? sysPrice / dailyLost : null;
+    const payback     = dailyLost > 0 ? (sysPrice * 12) / dailyLost : null;
 
     document.getElementById('d-lost-calls').textContent  = lostCalls.toFixed(1) + ' hívás';
     document.getElementById('d-daily-rev').textContent   = fmt(dailyLost);
@@ -524,9 +524,7 @@
 
     document.getElementById('r-lost').textContent    = fmt(monthlyLost);
     document.getElementById('r-roi').textContent     = roi.toFixed(1).replace('.', ',') + '×';
-    document.getElementById('r-payback').textContent = payback !== null
-      ? (payback < 1 ? payback.toFixed(1).replace('.', ',') : Math.ceil(payback)) + ' nap'
-      : '–';
+    document.getElementById('r-payback').textContent = payback !== null ? Math.ceil(payback) + ' nap' : '–';
 
     const pct = Math.min((roi / 20) * 100, 100);
     document.getElementById('progress-bar').style.width = pct + '%';
